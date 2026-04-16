@@ -1,0 +1,30 @@
+{
+  "name": "code.tradiscout",
+  "version": "1.0.0",
+  "description": "Tradiscout code tools - interactive encoding/decoding tools (Semaphore, Morse, Caesar, Vigenère)",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"No tests specified\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wandrillefm/code.tradiscout.git"
+  },
+  "keywords": [
+    "tradiscout",
+    "encoding",
+    "morse",
+    "semaphore",
+    "caesar",
+    "vigenere"
+  ],
+  "author": "Tradiscout",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wandrillefm/code.tradiscout/issues"
+  },
+  "homepage": "https://github.com/wandrillefm/code.tradiscout#readme",
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
+  }
+}
