@@ -3,25 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tradiscout</title>
+    <title>Outils - Tradiscout</title>
     <link rel="icon" type="image/x-icon" href="FINAL.png">
     <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root { --navy: #2C3776; --bg: #F8F2E7; --or: #c9a84c; --gris: #6b6b6b; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body { background: var(--bg); color: var(--navy); font-family: 'DM Mono', monospace; min-height: 100vh; overflow-x: hidden; }
-        #main-content { opacity: 0; transition: opacity 1s ease; }
-        
+
         header { position: sticky; top: 0; z-index: 600; background: var(--bg); border-bottom: 1px solid rgba(44,55,118,0.12); display: flex; align-items: center; justify-content: space-between; padding: 0 5%; height: 64px; }
-        .logo { font-family: 'Uncial Antiqua', serif; text-transform: uppercase; letter-spacing: 2px; font-size: 1.6rem; color: var(--navy); text-decoration: none; }
+        .logo { font-family: 'Uncial Antiqua', serif; text-transform: uppercase; letter-spacing: 2px; font-size: 1.6rem; color: var(--navy); text-decoration: none; transition: opacity 0.3s; }
+        .logo:hover { opacity: 0.65; }
+
         .main-nav { display: flex; gap: 32px; align-items: center; }
-        .main-nav a { text-decoration: none; color: var(--navy); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: lowercase; opacity: 0.4; transition: 0.2s; position: relative; padding-bottom: 3px; }
+        .main-nav a { text-decoration: none; color: var(--navy); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: lowercase; position: relative; padding-bottom: 3px; opacity: 0.4; transition: opacity 0.2s; }
+        .main-nav a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--navy); transition: width 0.25s ease; }
         .main-nav a:hover, .main-nav a.active { opacity: 1; }
-        .main-nav a.active::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 1px; background: var(--navy); }
+        .main-nav a.active::after { width: 100%; }
 
-        .content-wrap { max-width: 800px; margin: 0 auto; padding: 100px 5% 120px; text-align: center; min-height: 60vh; display: flex; align-items: center; justify-content: center; }
-        .content-wrap p { font-size: 1rem; line-height: 1.8; font-style: italic; opacity: 0.8; }
+        .content-wrap { max-width: 800px; margin: 0 auto; padding: 48px 5% 120px; text-align: center; }
 
+        /* OUTILS DE DÉCODAGE */
+        .code-nav { display: flex; justify-content: center; gap: 4px; margin-bottom: 20px; flex-wrap: wrap; }
+        .code-nav button { padding: 0.3rem 0.7rem; border: 1px solid rgba(44,55,118,0.22); background: transparent; color: var(--navy); cursor: pointer; font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.05em; transition: 0.12s; }
+        .code-nav button:hover { border-color: var(--navy); }
+        .code-nav button.active { background: var(--navy); color: var(--bg); border-color: var(--navy); }
+        .code-tab { display: none; }
+        .code-tab p { font-size: 0.7rem; line-height: 1.8; margin-bottom: 10px; color: var(--navy); }
+
+        textarea { width: 100%; padding: 8px; resize: none; height: 90px; overflow: auto; border: 1px solid rgba(44,55,118,0.22); background: white; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--navy); margin-top: 6px; }
+
+        .semaphore-wrapper { margin-top: 20px; margin-bottom: 40px; }
+        #semaphore-canvas { border: 1px solid rgba(44,55,118,0.22); background: white; }
+
+        /* FOOTER UNIFORMISÉ (Style Boutique) */
         footer { background: var(--navy); color: var(--bg); padding: 64px 5% 40px; }
         .footer-inner { max-width: 860px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 48px; }
         .footer-col-title { font-size: 0.52rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--or); margin-bottom: 25px; display: block; }
@@ -35,14 +51,15 @@
         .footer-bottom { max-width: 860px; margin: 48px auto 0; padding-top: 20px; border-top: 1px solid rgba(248,242,231,0.1); display: flex; justify-content: space-between; align-items: center; }
         .footer-bottom span { font-size: 0.5rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.35; }
 
+        /* TAB BAR MOBILE */
         .tab-bar { display: none; }
 
         @media (max-width: 768px) {
-            header { justify-content: center; }
+            header { justify-content: center; padding: 0; }
             .main-nav { display: none; }
             .footer-inner { grid-template-columns: 1fr; gap: 36px; }
             .tab-bar { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg); border-top: 1px solid rgba(44,55,118,0.13); z-index: 1000; padding-bottom: env(safe-area-inset-bottom, 0px); }
-            .tab-bar-btn { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px 0; text-decoration: none; color: var(--navy); opacity: 0.3; }
+            .tab-bar-btn { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px 0; text-decoration: none; color: var(--navy); opacity: 0.3; transition: 0.2s; }
             .tab-bar-btn.active { opacity: 1; }
             .tab-bar-btn span { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: lowercase; }
             footer { padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px)); }
@@ -50,58 +67,285 @@
     </style>
 </head>
 <body>
-    <div id="main-content">
-        <header>
-            <a class="logo" href="/">TRADISCOUT</a>
-            <nav class="main-nav">
-                <a href="/" class="active">accueil</a>
-                <a href="https://shop.tradiscout.com">boutique</a>
-                <a href="https://code.tradiscout.com">code</a>
-            </nav>
-        </header>
 
-        <div class="content-wrap">
-            <p>"Le scoutisme ne s'arrête pas au camp"</p>
+    <header>
+        <a class="logo" href="https://tradiscout.com">TRADISCOUT</a>
+        <nav class="main-nav">
+            <a href="https://tradiscout.com">accueil</a>
+            <a href="https://shop.tradiscout.com">boutique</a>
+            <a href="/" class="active">code</a>
+        </nav>
+    </header>
+
+    <div class="content-wrap">
+        <div class="code-nav">
+            <button onclick="showCodeTab('code-semaphore', this)" class="active">Sémaphore</button>
+            <button onclick="showCodeTab('code-morse', this)">Morse</button>
+            <button onclick="showCodeTab('code-caesar', this)">César</button>
+            <button onclick="showCodeTab('code-vigenere', this)">Vigenère</button>
         </div>
 
-        <footer>
-            <div class="footer-inner">
-                <div>
-                    <span class="footer-col-title">Réseaux</span>
-                    <ul class="footer-links">
-                        <li><a href="https://instagram.com/tradiscout" target="_blank"><span class="fl-label">Instagram</span><span class="fl-name">4 200+</span></a></li>
-                        <li><a href="https://www.tiktok.com/@tradiscout" target="_blank"><span class="fl-label">TikTok</span><span class="fl-name">20+ [Nouveau]</span></a></li>
-                        <li><a href="https://www.facebook.com/tradiscout" target="_blank"><span class="fl-label">Facebook</span><span class="fl-name">40+ [Nouveau]</span></a></li>
-                        <li><a href="https://pinterest.com/tradiscout" target="_blank"><span class="fl-label">Pinterest</span><span class="fl-name">Fonds d'écran</span></a></li>
-                    </ul>
-                </div>
-                <div>
-                    <span class="footer-col-title">Ressources</span>
-                    <ul class="footer-links">
-                        <li><a href="https://instagram.com/channel/AbYQB1ZxjbUUhCE5" target="_blank"><span class="fl-label">Groupe de prière</span><span class="fl-name">Tous les vendredis</span></a></li>
-                        <li><a href="https://open.spotify.com/playlist/4dol5mUeugWo8hvZdXnvZ8" target="_blank"><span class="fl-label">Playlist Spotify</span><span class="fl-name">500 titres musique de grand jeu</span></a></li>
-                        <li><a href="https://www.deezer.com/fr/playlist/13549630343" target="_blank"><span class="fl-label">Playlist Deezer</span><span class="fl-name">500 titres musique de grand jeu</span></a></li>
-                        <li><a href="https://tradiscout.notion.site/Pr-parer-ses-activit-s-2ad8736dad9f80a3b259da56bb5a5615" target="_blank"><span class="fl-label">Notion</span><span class="fl-name">Ressources activités</span></a></li>
-                    </ul>
-                </div>
-                <div>
-                    <span class="footer-col-title">Contact</span>
-                    <p class="footer-contact-text">Une suggestion, une photo, ou rejoindre l'équipe ?</p>
-                    <a href="mailto:tradiscout@gmail.com" class="footer-email">tradiscout@gmail.com</a>
-                </div>
+        <div id="code-semaphore" class="code-tab" style="display:block">
+            <p>Fais tourner les bras du sémaphore pour voir la lettre correspondante.</p>
+            <div class="semaphore-wrapper">
+                <canvas id="semaphore-canvas" width="260" height="260"></canvas>
+                <p>Lettre détectée : <span id="semaphore-letter">?</span></p>
             </div>
-            <div class="footer-bottom">
-                <span>© 2026 Tradiscout</span>
-                <span>Verso l'Alto!</span>
-            </div>
-        </footer>
+        </div>
 
-        <nav class="tab-bar">
-            <a href="/" class="tab-bar-btn active"><span>accueil</span></a>
-            <a href="https://shop.tradiscout.com" class="tab-bar-btn"><span>boutique</span></a>
-            <a href="https://code.tradiscout.com" class="tab-bar-btn"><span>code</span></a>
-        </nav>
+        <div id="code-morse" class="code-tab">
+            <p>Écris du texte ou du morse, le résultat apparaît en dessous.</p>
+            <textarea id="morse-input" placeholder="Texte ou Morse"></textarea>
+            <textarea id="morse-output" placeholder="Résultat" readonly style="background:rgba(44,55,118,0.04)"></textarea>
+        </div>
+
+        <div id="code-caesar" class="code-tab">
+            <p>Choisis un décalage et écris ton texte.</p>
+            <label style="font-size:0.6rem;letter-spacing:0.08em">Décalage :
+                <input type="number" id="shift" value="3" min="0" max="25" style="width:60px;padding:4px;margin:10px;border:1px solid rgba(44,55,118,0.22);background:white;font-family:'DM Mono',monospace;">
+            </label>
+            <textarea id="caesar-input" placeholder="Texte clair"></textarea>
+            <textarea id="caesar-output" placeholder="Résultat" readonly style="background:rgba(44,55,118,0.04)"></textarea>
+        </div>
+
+        <div id="code-vigenere" class="code-tab">
+            <p>Le code Vigenère utilise un mot-clé pour crypter le message.</p>
+            <div style="display:flex;gap:8px;margin-bottom:6px;margin-top:8px">
+                <input type="text" id="vig-key" placeholder="MOT-CLÉ (ex: SCOUT)" style="flex:2;padding:8px;text-transform:uppercase;border:1px solid rgba(44,55,118,0.22);background:white;font-family:'DM Mono',monospace;font-size:0.65rem;">
+                <select id="vig-mode" style="flex:1;padding:8px;background:white;border:1px solid rgba(44,55,118,0.22);color:var(--navy);font-family:'DM Mono',monospace;font-size:0.65rem;">
+                    <option value="encode">Chiffrer</option>
+                    <option value="decode">Déchiffrer</option>
+                </select>
+            </div>
+            <textarea id="vig-input" placeholder="Message à traiter"></textarea>
+            <textarea id="vig-output" placeholder="Résultat" readonly style="background:rgba(44,55,118,0.04)"></textarea>
+        </div>
     </div>
-    <script>window.addEventListener('load', () => document.getElementById('main-content').style.opacity = '1');</script>
+
+    <footer>
+        <div class="footer-inner">
+            <div>
+                <span class="footer-col-title">Réseaux</span>
+                <ul class="footer-links">
+                    <li><a href="https://instagram.com/tradiscout" target="_blank"><span class="fl-label">Instagram</span><span class="fl-name">4 200+</span></a></li>
+                    <li><a href="https://www.tiktok.com/@tradiscout" target="_blank"><span class="fl-label">TikTok</span><span class="fl-name">20+ [Nouveau]</span></a></li>
+                    <li><a href="https://www.facebook.com/tradiscout" target="_blank"><span class="fl-label">Facebook</span><span class="fl-name">40+ [Nouveau]</span></a></li>
+                    <li><a href="https://pinterest.com/tradiscout" target="_blank"><span class="fl-label">Pinterest</span><span class="fl-name">Fonds d'écran</span></a></li>
+                </ul>
+            </div>
+            <div>
+                <span class="footer-col-title">Ressources</span>
+                <ul class="footer-links">
+                    <li><a href="https://instagram.com/channel/AbYQB1ZxjbUUhCE5" target="_blank"><span class="fl-label">Groupe de prière</span><span class="fl-name">Tous les vendredis</span></a></li>
+                    <li><a href="https://open.spotify.com/playlist/4dol5mUeugWo8hvZdXnvZ8" target="_blank"><span class="fl-label">Playlist Spotify</span><span class="fl-name">500 titres musique de grand jeu</span></a></li>
+                    <li><a href="https://www.deezer.com/fr/playlist/13549630343" target="_blank"><span class="fl-label">Playlist Deezer</span><span class="fl-name">500 titres musique de grand jeu</span></a></li>
+                    <li><a href="https://tradiscout.notion.site/Pr-parer-ses-activit-s-2ad8736dad9f80a3b259da56bb5a5615" target="_blank"><span class="fl-label">Notion</span><span class="fl-name">Ressources activités</span></a></li>
+                </ul>
+            </div>
+            <div>
+                <span class="footer-col-title">Contact</span>
+                <p class="footer-contact-text">Une suggestion, une photo, ou rejoindre l'équipe ?</p>
+                <a href="mailto:tradiscout@gmail.com" class="footer-email">tradiscout@gmail.com</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 Tradiscout</span>
+            <span>Verso l'Alto!</span>
+        </div>
+    </footer>
+
+    <nav class="tab-bar">
+        <a href="https://tradiscout.com" class="tab-bar-btn"><span>accueil</span></a>
+        <a href="https://shop.tradiscout.com" class="tab-bar-btn"><span>boutique</span></a>
+        <a href="/" class="tab-bar-btn active"><span>code</span></a>
+    </nav>
+
+    <script>
+        // NAVIGATION DES ONGLETS
+        function showCodeTab(id, btn) {
+            document.querySelectorAll('.code-tab').forEach(t => t.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+            document.querySelectorAll('.code-nav button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        // LOGIQUE MORSE
+        const morseMap = {
+          'A':'.-','B':'-...','C':'-.-.','D':'-..','E':'.','F':'..-.','G':'--.','H':'....','I':'..','J':'.---',
+          'K':'-.-','L':'.-..','M':'--','N':'-.','O':'---','P':'.--.','Q':'--.-','R':'.-.','S':'...','T':'-',
+          'U':'..-','V':'...-','W':'.--','X':'-..-','Y':'-.--','Z':'--..',
+          '0':'-----','1':'.----','2':'..---','3':'...--','4':'....-','5':'.....','6':'-....','7':'--...','8':'---..','9':'----.'
+        };
+        const inverseMorse = Object.fromEntries(Object.entries(morseMap).map(([k,v]) => [v,k]));
+
+        function looksLikeMorse(str) { return /^[.\-\/\s]+$/.test(str.trim()); }
+        function textToMorseCustom(str) {
+          return str.toUpperCase().replace(/[^A-Z0-9 ]/g,'').split(/\s+/).filter(Boolean)
+            .map(w => w.split('').map(c => morseMap[c] ? morseMap[c]+' /' : '').filter(Boolean).join(' ').trim())
+            .join('/ ');
+        }
+        function morseToTextCustom(str) {
+          if (!str.trim()) return '';
+          return str.split('//').map(w => w.trim()).filter(Boolean)
+            .map(w => w.replace(/\/+/g,'/').split('/').map(s => s.trim()).filter(Boolean)
+              .map(b => inverseMorse[b.split(/\s+/).join(' ')] || '').join('')).join(' ');
+        }
+
+        const morseInput = document.getElementById('morse-input');
+        const morseOutput = document.getElementById('morse-output');
+        if (morseInput) {
+          morseInput.addEventListener('input', () => {
+            const v = morseInput.value;
+            morseOutput.value = !v.trim() ? '' : looksLikeMorse(v) ? morseToTextCustom(v) : textToMorseCustom(v);
+          });
+        }
+
+        // LOGIQUE CÉSAR
+        function caesar(str, shift) {
+          return str.split('').map(ch => {
+            const code = ch.charCodeAt(0);
+            if (code >= 65 && code <= 90) return String.fromCharCode(((code-65+shift+26)%26)+65);
+            if (code >= 97 && code <= 122) return String.fromCharCode(((code-97+shift+26)%26)+97);
+            return ch;
+          }).join('');
+        }
+        const caesarInput = document.getElementById('caesar-input');
+        const caesarOutput = document.getElementById('caesar-output');
+        const shiftInput = document.getElementById('shift');
+        function updateCaesar() { if(caesarOutput) caesarOutput.value = caesar(caesarInput.value, parseInt(shiftInput.value||'0',10)); }
+        if (caesarInput) { caesarInput.addEventListener('input', updateCaesar); shiftInput.addEventListener('input', updateCaesar); }
+
+        // LOGIQUE SÉMAPHORE
+        const semaphoreAlphabet = {
+          'A':[135,90],'B':[180,90],'C':[225,90],'D':[270,90],'E':[90,315],'F':[90,0],'G':[90,45],'H':[180,135],
+          'I':[225,135],'J':[270,0],'K':[135,270],'L':[135,315],'M':[135,0],'N':[135,45],'O':[180,225],'P':[180,270],
+          'Q':[180,315],'R':[180,0],'S':[180,45],'T':[225,270],'U':[225,315],'V':[270,45],'W':[315,0],'X':[315,45],
+          'Y':[225,0],'Z':[0,45]
+        };
+        const semaphoreMap = {};
+        Object.entries(semaphoreAlphabet).forEach(([l,[left,right]]) => {
+          semaphoreMap[`${left}-${right}`] = l;
+          semaphoreMap[`${right}-${left}`] = l;
+        });
+        const canvas = document.getElementById('semaphore-canvas');
+        const semaphoreLetterSpan = document.getElementById('semaphore-letter');
+        let armAngles = { left: 135, right: 90 };
+        let targetAngles = { ...armAngles };
+        let lastTimestamp = 0;
+
+        function drawSemaphoreFigure(ctx, w, h, leftAngle, rightAngle) {
+          const cx = w/2, cy = h/2+10;
+          ctx.clearRect(0,0,w,h);
+          ctx.strokeStyle = '#2C3776'; ctx.lineWidth = 5; ctx.lineCap = 'round';
+          ctx.beginPath(); ctx.moveTo(cx,cy-25); ctx.lineTo(cx,cy+35); ctx.stroke();
+          ctx.beginPath(); ctx.arc(cx,cy-35,10,0,Math.PI*2); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(cx,cy+35); ctx.lineTo(cx-15,cy+60); ctx.moveTo(cx,cy+35); ctx.lineTo(cx+15,cy+60); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(cx-18,cy-10); ctx.lineTo(cx+18,cy-10); ctx.stroke();
+          function drawArm(angleDeg, isLeft) {
+            const rad = angleDeg*Math.PI/180, armLen = 70;
+            const sx = isLeft ? cx-18 : cx+18, sy = cy-10;
+            const hx = sx+Math.cos(rad)*armLen, hy = sy+Math.sin(rad)*armLen;
+            ctx.strokeStyle = '#2C3776'; ctx.lineWidth = 5;
+            ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(hx,hy); ctx.stroke();
+            const size = 22;
+            ctx.save(); ctx.translate(hx,hy); ctx.rotate(rad);
+            const xo = -20, yo = isLeft ? -size : 0;
+            ctx.fillStyle = '#ffdf40'; ctx.beginPath(); ctx.moveTo(xo,yo); ctx.lineTo(xo+size,yo); ctx.lineTo(xo,yo+size); ctx.closePath(); ctx.fill();
+            ctx.fillStyle = '#c00000'; ctx.beginPath(); ctx.moveTo(xo+size,yo); ctx.lineTo(xo+size,yo+size); ctx.lineTo(xo,yo+size); ctx.closePath(); ctx.fill();
+            ctx.strokeStyle = '#7a0000'; ctx.lineWidth = 1.5; ctx.strokeRect(xo,yo,size,size);
+            ctx.restore();
+          }
+          drawArm(leftAngle, true); drawArm(rightAngle, false);
+        }
+
+        function updateSemaphoreLetterFromAngles() {
+          const snap = d => Math.round(d/45)*45;
+          const aL = (snap(armAngles.left)+360)%360, aR = (snap(armAngles.right)+360)%360;
+          semaphoreLetterSpan.textContent = semaphoreMap[`${aL}-${aR}`] || '?';
+        }
+
+        function animateSemaphore(timestamp) {
+          if (!canvas) return;
+          const ctx = canvas.getContext('2d'), dt = (timestamp-lastTimestamp)/1000||0;
+          lastTimestamp = timestamp;
+          ['left','right'].forEach(side => {
+            let diff = targetAngles[side]-armAngles[side];
+            if (Math.abs(diff) > 180) diff -= Math.sign(diff)*360;
+            armAngles[side] = (armAngles[side]+diff*Math.min(1,dt*12)+360)%360;
+          });
+          drawSemaphoreFigure(ctx,canvas.width,canvas.height,armAngles.left,armAngles.right);
+          updateSemaphoreLetterFromAngles();
+          requestAnimationFrame(animateSemaphore);
+        }
+        if (canvas) requestAnimationFrame(animateSemaphore);
+
+        let draggingArm = null;
+        function getPointerPos(e) {
+          const rect = canvas.getBoundingClientRect();
+          return { x: (e.touches?e.touches[0].clientX:e.clientX)-rect.left, y: (e.touches?e.touches[0].clientY:e.clientY)-rect.top };
+        }
+        function getHandPos(isLeft, angleDeg) {
+          const rad = angleDeg*Math.PI/180, cx = canvas.width/2, cy = canvas.height/2+10;
+          const sx = isLeft ? cx-18 : cx+18;
+          return { x: sx+Math.cos(rad)*70, y: cy-10+Math.sin(rad)*70 };
+        }
+        function handlePointerDown(e) {
+          const pos = getPointerPos(e);
+          const lh = getHandPos(true,targetAngles.left), rh = getHandPos(false,targetAngles.right);
+          const dL = Math.hypot(pos.x-lh.x,pos.y-lh.y), dR = Math.hypot(pos.x-rh.x,pos.y-rh.y);
+          if (dL < 40 && dL <= dR) { draggingArm='left'; e.preventDefault(); }
+          else if (dR < 40) { draggingArm='right'; e.preventDefault(); }
+        }
+        function handlePointerMove(e) {
+          const pos = getPointerPos(e);
+          if (!draggingArm && e.type==='mousemove') {
+            const lh=getHandPos(true,targetAngles.left), rh=getHandPos(false,targetAngles.right);
+            canvas.style.cursor = (Math.hypot(pos.x-lh.x,pos.y-lh.y)<40||Math.hypot(pos.x-rh.x,pos.y-rh.y)<40)?'grab':'default';
+            return;
+          }
+          if (!draggingArm) return;
+          e.preventDefault(); canvas.style.cursor = 'grabbing';
+          const cx=canvas.width/2, cy=canvas.height/2+10, isLeft=draggingArm==='left';
+          const sx=isLeft?cx-18:cx+18, sy=cy-10;
+          let ang = Math.atan2(pos.y-sy,pos.x-sx)*180/Math.PI;
+          if (ang<0) ang+=360;
+          const norm = (Math.round(ang/45)*45+360)%360;
+          armAngles[draggingArm] = targetAngles[draggingArm] = norm;
+          updateSemaphoreLetterFromAngles();
+        }
+        function handlePointerUp() { draggingArm=null; canvas.style.cursor='default'; }
+        if (canvas) {
+          canvas.addEventListener('mousedown',handlePointerDown);
+          canvas.addEventListener('mousemove',handlePointerMove);
+          canvas.addEventListener('mouseup',handlePointerUp);
+          canvas.addEventListener('mouseleave',handlePointerUp);
+          canvas.addEventListener('touchstart',handlePointerDown,{passive:false});
+          canvas.addEventListener('touchmove',handlePointerMove,{passive:false});
+          canvas.addEventListener('touchend',handlePointerUp);
+          canvas.addEventListener('touchcancel',handlePointerUp);
+        }
+
+        // LOGIQUE VIGENÈRE
+        function vigenereLogic(text, key, mode) {
+          if (!key) return text;
+          key = key.toUpperCase().replace(/[^A-Z]/g,'');
+          if (!key.length) return text;
+          let result='', ki=0;
+          for (let c of text) {
+            if (/[a-zA-Z]/.test(c)) {
+              const upper = c===c.toUpperCase(), base = upper?65:97;
+              let shift = key.charCodeAt(ki%key.length)-65;
+              if (mode==='decode') shift=-shift;
+              result += String.fromCharCode(((c.charCodeAt(0)-base+shift%26+26)%26)+base);
+              ki++;
+            } else result += c;
+          }
+          return result;
+        }
+        const vigInput=document.getElementById('vig-input'), vigKey=document.getElementById('vig-key'),
+              vigMode=document.getElementById('vig-mode'), vigOutput=document.getElementById('vig-output');
+        function updateVigenere() { if(vigOutput) vigOutput.value = vigenereLogic(vigInput.value,vigKey.value,vigMode.value); }
+        if (vigInput) { vigInput.addEventListener('input',updateVigenere); vigKey.addEventListener('input',updateVigenere); vigMode.addEventListener('change',updateVigenere); }
+    </script>
 </body>
 </html>
